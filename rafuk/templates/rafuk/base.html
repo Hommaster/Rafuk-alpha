@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+<a href="{% url 'home' %}">Главная страница</a>
+<form action="{% url 'search_results' %}" method="get">
+  <input name='q' type="text" placeholder="Поиск товара...">
+</form>
+{% block content %}
+
+{% endblock content%}
+</body>
+</html>

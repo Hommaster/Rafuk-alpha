@@ -1,0 +1,30 @@
+{% block content %}
+
+{% if user.is_authenticated %}
+{% if user_now %}
+<form action="{% url 'UpdatePost' slug=user_post.slug %}" method="post">
+    {% csrf_token %}
+
+    {% for f in sform %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}:</label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+    {% if get_out %}
+    <input type="submit" value="Update" onclick="rafuk.location.href=''">
+    {% else %}
+    Ваши корректировки вступили в силу, спасибо!
+    <p>Хотели ли бы Вы вернуться на главную страницу?<a href="{% url 'home' %}">Главная страница</a></p>
+    {% endif %}
+</form>
+ <p>Вернуться на Ваш профиль?<a href="{% url 'users' users_slug=posts.users.slug_field%}">Моя страница</a></p>
+{% else %}
+Вы не являетесь владельцем данного поста, в доступе к удалению - отказано!
+<a href="{% url 'home' %}">Вернуться на главную страницу</a>
+Забыли зайти в аккаунт? <a href="{% url 'login' %}">Авторизоваться</a>
+{% endif %}
+{% else %}
+Вы не являетесь владельцем данного поста, в доступе к удалению - отказано!
+<a href="{% url 'home' %}">Вернуться на главную страницу</a>
+Забыли зайти в аккаунт? <a href="{% url 'login' %}">Авторизоваться</a>
+{% endif %}
+{% endblock %}

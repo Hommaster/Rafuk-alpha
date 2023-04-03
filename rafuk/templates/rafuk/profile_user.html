@@ -1,0 +1,31 @@
+{% extends 'rafuk/base.html' %}
+{% block content %}
+{{ request.user.username }}
+{{ profile.username }}
+{% if rp %}
+<p>Ваше имя: {{ profile.name }}</p>
+<p>Ваша фамилия: {{ profile.surname }}</p>
+<p>Ваши контактные данные: {{ profile.phone_number }}</p>
+<p><a href="{% url 'Update_Profile' users_slug=us.slug_field %}">Изменить личные данные</a></p>
+Ваши товары:
+{% for i in user_products %}
+<li>
+    <p><a href="{{i.get_absolute_url }}">{{i.title}}</a></p>
+    <p>{{ i.content }}</p>
+    <p>{{ i.price }}$</p>
+    <p><a href="{% url 'UpdatePost' i.slug %}">Редактировать пост</a></p>
+    <p><a href="{% url 'Delete_Post' i.slug %}">Удалить пост</a></p>
+</li>
+{% endfor %}
+{% else %}
+<p>Имя пользователя: {{ profile.name }}</p>
+<p>Фамилия пользователя: {{ profile.surname }}</p>
+<p>Контактные данные: {{ profile.phone_number }}</p>
+Предложения от данного пользователя:
+{% for i in user_products %}
+<p><a href="{{i.get_absolute_url }}">{{i.title}}</a></p>
+<p>{{ i.content }}</p>
+<p>{{ i.price }}$</p>
+{% endfor %}
+{% endif %}
+{% endblock content%}

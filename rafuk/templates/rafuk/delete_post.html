@@ -1,0 +1,14 @@
+{% block content %}
+{% if user_now %}
+<form action="{% url 'Delete_Post' slug=user_post.slug %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+    <a href="{% url 'users' users_slug=posts.users.slug_field %}">Вернуться на страницу</a>
+    {{ post_user }}
+</form>
+{% else %}
+Вы не являетесь владельцем данного поста, в доступе к удалению - отказано!
+<a href="{% url 'home' %}">Вернуться на главную страницу</a>
+Забыли зайти в аккаунт? <a href="{% url 'login' %}">Авторизоваться</a>
+{% endif %}
+{% endblock %}

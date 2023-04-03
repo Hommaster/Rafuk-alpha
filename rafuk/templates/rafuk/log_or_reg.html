@@ -1,0 +1,6 @@
+{% extends 'rafuk/base.html' %}
+{% block content %}
+<p>Вы перенаправлены на эту страницу, т.к. функция "Добавить статью" доступна только авторизованным пользователям</p>
+<p>Если у вас есть аккаунт, пройдите авторизацию=></p><a href="{% url 'login' %}"><button1 type="submit">Войти</button1></a>
+<p>Если у вас нет аккаунта, пройдите регистрацию=></p><a href="{% url 'register' %}"><button1 type="submit">Регистрация</button1></a>
+{% endblock content %}

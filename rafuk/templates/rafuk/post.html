@@ -1,0 +1,11 @@
+{% extends 'rafuk/base.html' %}
+{% block content %}
+{% for p in post %}
+<p>Имя товара: {{p.title}}</p>
+<p>Категория: {{p.cat}}</p>
+<p>Фотокарточка: <img class="img-article-left thumb" src="{{p.photo.url}}"></p>
+<p>Описание: {{p.content}}</p>
+<p>Место продажи: {{p.where}}</p>
+<p>Время загрузки обьявления: {{p.time_create}}</p>
+{% endfor %}
+{% endblock content %}

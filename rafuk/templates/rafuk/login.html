@@ -1,0 +1,16 @@
+{% extends 'rafuk/base.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+<div class="form-error">{{ form.non_field_errors }}</div>
+
+{% for f in form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+    <button type="submit">Войти</button>
+    <p>Если у вас нет аккаунта, пройдите регистрацию=></p><a href="{% url 'register' %}"><button1 type="submit">Регистрация</button1></a>
+
+</form>
+{% endblock content %}

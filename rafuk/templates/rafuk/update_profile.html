@@ -1,0 +1,18 @@
+{% if user.is_authenticated %}
+{% if user_now %}
+<form action="{% url 'Update_Profile' users_slug=user_post.slug_field %}" method="post">
+    {% csrf_token %}
+
+    {% for f in sform %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}:</label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+    <input type="submit" value="Update" onclick="rafuk.location.href=''">
+</form>
+{% else %}
+Вы не являетесь владельцем данного профиля, в доступе к удалению - отказано!
+<a href="{% url 'home' %}">Вернуться на главную страницу</a>
+{% endif %}
+{% else %}
+Забыли зайти в аккаунт? <a href="{% url 'login' %}">Авторизоваться</a>
+{% endif %}

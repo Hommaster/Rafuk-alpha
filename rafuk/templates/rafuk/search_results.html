@@ -1,0 +1,15 @@
+<h1>Результат поиска</h1>
+
+{% extends 'rafuk/base.html' %}
+{% block content %}
+
+<ul>
+  {% for o in object_list %}
+    <li>
+      <a href="{{o.get_absolute_url }}">{{ o.title }}</a>
+        <p>{{ o.content }}</p>
+        <p>Пользователь: <a href="{{ o.users.get_absolute_url }}">{{o.users.name}}</a></p>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock content %}
