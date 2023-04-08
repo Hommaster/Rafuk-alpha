@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -12,7 +11,7 @@ from .models import *
 from .utils import DataMixin
 
 
-class MainHome(DataMixin, ListView):
+class MainHome(ListView):
     template_name = 'rafuk/home.html'
     model = Product
     context_object_name = 'posts'
@@ -23,11 +22,11 @@ class MainHome(DataMixin, ListView):
         if self.request.user.is_authenticated:
             unap = UserPr.objects.get(username=user_authenticated)
             context['unap'] = unap
-        c_df = self.get_context_user(title='Главная страница')
-        return dict(list(context.items())+list(c_df.items()))
+        context['title'] = 'Главная страница'
+        return context
 
 
-class AddPost(DataMixin, LoginRequiredMixin, CreateView):
+class AddPost(LoginRequiredMixin, CreateView):
     template_name = 'rafuk/addpage.html'
     form_class = AddPostForm
     success_url = reverse_lazy('home')
@@ -35,23 +34,23 @@ class AddPost(DataMixin, LoginRequiredMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_df = self.get_context_user(title='Добавить статью')
-        return dict(list(context.items()) + list(c_df.items()))
+        context['title'] = 'Добавить статью'
+        return context
 
     def form_valid(self, form):
         form.instance.users = self.request.user
         return super().form_valid(form)
 
 
-class AddUser(DataMixin, CreateView):
+class AddUser(CreateView):
     form_class = UserCreateForm
     template_name = 'rafuk/register.html'
     success_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_df = self.get_context_user(title='Регистрация пользователя')
-        return dict(list(context.items()) + list(c_df.items()))
+        context['title'] = 'Регистрация пользователя'
+        return context
 
     def form_valid(self, form):
         user = form.save()
@@ -59,7 +58,7 @@ class AddUser(DataMixin, CreateView):
         return redirect('home')
 
 
-class LoginUser(DataMixin, LoginView):
+class LoginUser(LoginView):
     form_class = LoginUserForm
     template_name = 'rafuk/login.html'
 
@@ -68,8 +67,8 @@ class LoginUser(DataMixin, LoginView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_df = self.get_context_user(title='Авторизация')
-        return dict(list(context.items()) + list(c_df.items()))
+        context['title'] = 'Авторизация'
+        return context
 
 
 def logout_user(request):
@@ -81,7 +80,7 @@ def log_or_reg(request):
     return render(request, 'rafuk/log_or_reg.html', {'title': 'Отказано в доступе "Добавить статью"'})
 
 
-class ProfileUser(DataMixin, DetailView):
+class ProfileUser(DetailView):
     template_name = 'rafuk/profile_user.html'
     slug_url_kwarg = 'users_slug'
     context_object_name = 'profile'
@@ -105,11 +104,12 @@ class ProfileUser(DataMixin, DetailView):
                 context['rp'] = True
             else:
                 context['rp'] = False
-        c_df = self.get_context_user(user_products=pr, title=us.surname + ' ' + us.name)
-        return dict(list(context.items()) + list(c_df.items()))
+        context['user_products'] = pr
+        context['title'] = us.surname + ' ' + us.name
+        return context
 
 
-class ShowPost(DataMixin, DetailView):
+class ShowPost(DetailView):
     model = Product
     slug_url_kwarg = 'post_slug'
     template_name = 'rafuk/post.html'
@@ -119,18 +119,19 @@ class ShowPost(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs['post_slug']
         post = Product.objects.filter(slug=slug)
-        c_df = self.get_context_user(title="Демонстрация поста", post=post)
-        return dict(list(context.items()) + list(c_df.items()))
+        context['title'] = "Демонстрация поста"
+        context['post'] = post
+        return context
 
 
-class SearchResultsView(DataMixin, ListView):
+class SearchResultsView(ListView):
     model = Product
     template_name = 'rafuk/search_results.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_df = self.get_context_user(title="Результат поиска")
-        return dict(list(context.items()) + list(c_df.items()))
+        context['title'] = "Результат поиска"
+        return context
 
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -138,7 +139,7 @@ class SearchResultsView(DataMixin, ListView):
         return object_list
 
 
-class UpdatePost2(DataMixin, UpdateView):
+class UpdatePost2(UpdateView):
     form_class = AddPostForm
     template_name = 'rafuk/update_post.html'
     context_object_name = 'update_posts'
@@ -146,7 +147,7 @@ class UpdatePost2(DataMixin, UpdateView):
     def get_context_data(self, **kwargs):
         if self.request.user.is_authenticated:
             context = super().get_context_data(**kwargs)
-            c_df = self.get_context_user(title='Редактирование товара')
+            context['title'] = 'Редактирование товара'
             slug = self.kwargs['slug']
             post = Product.objects.filter(slug=slug)
             posts = Product.objects.get(slug=slug)
@@ -174,7 +175,7 @@ class UpdatePost2(DataMixin, UpdateView):
                 context['sform'] = sform
                 context['get_out'] = True
 
-            return dict(list(context.items()) + list(c_df.items()))
+            return context
         else:
             context = None
             return context
@@ -183,7 +184,7 @@ class UpdatePost2(DataMixin, UpdateView):
         return self.request.user
 
 
-class DeletePost(DataMixin, DeleteView):
+class DeletePost(DeleteView):
     model = Product
     template_name = 'rafuk/delete_post.html'
     context_object_name = 'tasks'
@@ -191,7 +192,7 @@ class DeletePost(DataMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_df = self.get_context_user(title="Удаление поста")
+        context['title'] = "Удаление поста"
         slug = self.kwargs['slug']
         posts = Product.objects.get(slug=slug)
         context['posts'] = posts
@@ -204,56 +205,91 @@ class DeletePost(DataMixin, DeleteView):
             context['user_now'] = False
         userpost = get_object_or_404(Product, slug=slug)
         context['user_post'] = userpost
-        return dict(list(context.items()) + list(c_df.items()))
+        return context
 
     def form_valid(self, form):
         messages.success(self.request, "Удаление поста прошло успешно!")
         return super(DeletePost, self).form_valid(form)
 
 
-class UppdateProfile(UpdateView):
-    form_class = UserCreateForm
+class UpdateProfile(DataMixin, UpdateView):
+    form_class = UserUpdateForm2
     slug_url_kwarg = 'users_slug'
     template_name = 'rafuk/update_profile.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('home')
     context_object_name = 'update_profile'
-
-    def get_context_data(self, **kwargs):
-        if self.request.user.is_authenticated:
-            context = super().get_context_data(**kwargs)
-            slug = self.kwargs['users_slug']
-            userpost = UserPr.objects.get(slug_field=slug)
-            user_post = get_object_or_404(UserPr, slug_field=slug)
-            context['user_post'] = user_post
-            if self.request.method == 'POST':
-                sform = UserCreateForm(self.request.POST, instance=userpost)
-                if sform.is_valid():
-                    userpost = sform.save()
-                    userpost.save()
-                    context['userpost'] = userpost
-                    context['get_out'] = False
-            else:
-                sform = UserCreateForm(instance=userpost)
-                userpost.save()
-                context['sform'] = sform
-                context['get_out'] = True
-            ruu = self.request.user.username
-            context['userpost'] = userpost.username
-            if str(userpost) == str(ruu):
-                context['user_now'] = True
-            else:
-                context['user_now'] = False
-            return context
-        else:
-            context = None
-            return context
 
     def get_object(self, queryset=None):
         slug = self.kwargs['users_slug']
         a_obj = UserPr.objects.get(slug_field=slug)
         return a_obj
 
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('home')
+
+class ChangePassword(DataMixin, UpdateView):
+    form_class = ChangePasswordForm
+    template_name = 'rafuk/change_password.html'
+    success_url = reverse_lazy('home')
+    slug_url_kwarg = 'users_slug'
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs['users_slug']
+        a_obj = UserPr.objects.get(slug_field=slug)
+        return a_obj
+
+
+class SearchResultsEmail(ListView):
+    model = UserPr
+    template_name = 'rafuk/change_password_na.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Результат поиска пользователя'
+        return context
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = UserPr.objects.filter(email__icontains=query)
+        return object_list
+
+
+def search_email(request):
+    return render(request, 'rafuk/search_email.html', {'title': 'Результат поиска аккаунта'})
+
+
+class ChangePasswordNA(UpdateView):
+    form_class = ChangePasswordForm
+    slug_url_kwarg = 'users_slug'
+    template_name = 'rafuk/change_password_naAA.html'
+    success_url = reverse_lazy('home')
+    context_object_name = 'update_password_na'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs['users_slug']
+        userpost = UserPr.objects.get(slug_field=slug)
+        user_post = get_object_or_404(UserPr, slug_field=slug)
+        context['user_post'] = user_post
+        if self.request.method == 'POST':
+            sform = ChangePasswordForm(self.request.POST, instance=userpost)
+            if sform.is_valid():
+                userpost = sform.save()
+                userpost.save()
+                context['userpost'] = userpost
+                context['get_out'] = False
+        else:
+            sform = ChangePasswordForm(instance=userpost)
+            userpost.save()
+            context['sform'] = sform
+            context['get_out'] = True
+        ruu = self.request.user.username
+        context['userpost'] = userpost.username
+        if str(userpost) == str(ruu):
+            context['user_now'] = True
+        else:
+            context['user_now'] = False
+        return context
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs['users_slug']
+        a_obj = UserPr.objects.get(slug_field=slug)
+        return a_obj

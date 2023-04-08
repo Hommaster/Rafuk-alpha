@@ -9,10 +9,6 @@
     <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
     <div class="form-error">{{ f.errors }}</div>
     {% endfor %}
-    {% if request.user.is_authenticated %}
-    {{ user.username }}
-    {% endif %}
-    <p>{{ user.id }}</p>
     <button type="submit">Добавить новую статью</button>
 </form>
 {% endblock content %}

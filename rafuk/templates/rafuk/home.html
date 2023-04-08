@@ -1,6 +1,8 @@
 {% extends 'rafuk/base.html' %}
+
 {% block content %}
 <a href="{% url 'AddPost' %}">Добавить статью</a>
+
 {% if user.is_authenticated %}
 <a href="{{ unap.get_absolute_url }}">Личный кабинет</a>
 <a href="{% url 'logout' %}">Выйти</a>
@@ -8,17 +10,17 @@
 <a href="{% url 'login' %}">Войти</a>
 <a href="{% url 'register' %}">Регистрация</a>
 {% endif %}
+
 {% block content1 %}
 {% for p in posts %}
-<p>Имя товара: {{p.title}}</p>
-<p>Категория: {{p.cat}}</p>
+<p>Имя товара: {{ p.title }}</p>
+<p>Категория: {{ p.cat }}</p>
 <p>Фотокарточка: <img class="img-article-left thumb" src="{{p.photo.url}}"></p>
-<p>Описание: {{p.content}}</p>
-<p>Место продажи: {{p.where}}</p>
-<p>Время загрузки обьявления: {{p.time_create}}</p>
+<p>Описание: {{ p.content }}</p>
+<p>Место продажи: {{ p.where }}</p>
+<p>Время загрузки обьявления: {{ p.time_create }}</p>
 <li><a href="{{p.get_absolute_url }}">Читать пост</a></li>
-<li><a href="{{ p.users.get_absolute_url }}">{{p.users.name}}</a></li>
-{{ p.users.get_absolute_url }}
+<li><a href="{{ p.users.get_absolute_url }}">{{ p.users.name }} {{ p.users.surname }}</a></li>
 {% endfor %}
 
 {% endblock content1 %}

@@ -4,7 +4,6 @@
     {% csrf_token %}
     <input type="submit" value="Удалить">
     <a href="{% url 'users' users_slug=posts.users.slug_field %}">Вернуться на страницу</a>
-    {{ post_user }}
 </form>
 {% else %}
 Вы не являетесь владельцем данного поста, в доступе к удалению - отказано!

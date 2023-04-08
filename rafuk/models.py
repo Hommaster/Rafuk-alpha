@@ -2,7 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import PROTECT
 from django.urls import reverse
-from .utils import slugify
+
+from .templates.slugify import slugify
 
 
 class Product(models.Model):
@@ -92,8 +93,3 @@ class UserPr(AbstractUser):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
-
-
-class ManyToMany(models.Model):
-    user = models.ForeignKey('UserPr', on_delete=PROTECT)
-    product = models.ForeignKey('Product', on_delete=PROTECT)

@@ -10,7 +10,7 @@
 <div class="form-error">{{ f.errors }}</div>
 {% endfor %}
     <button type="submit">Войти</button>
-    <p>Если у вас нет аккаунта, пройдите регистрацию=></p><a href="{% url 'register' %}"><button1 type="submit">Регистрация</button1></a>
-
+    <p>Если у вас нет аккаунта, пройдите регистрацию=></p><a href="{% url 'register' %}">Регистрация</a>
+    <p>Забыли пароль? =></p><a href="{% url 'search_email' %}">Поменять пароль</a>
 </form>
 {% endblock content %}
