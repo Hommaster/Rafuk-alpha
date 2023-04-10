@@ -14,6 +14,7 @@ from .utils import DataMixin
 class MainHome(ListView):
     template_name = 'rafuk/home.html'
     model = Product
+    paginate_by = 5
     context_object_name = 'posts'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -219,6 +220,11 @@ class UpdateProfile(DataMixin, UpdateView):
     success_url = reverse_lazy('home')
     context_object_name = 'update_profile'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменение данных профиля'
+        return context
+
     def get_object(self, queryset=None):
         slug = self.kwargs['users_slug']
         a_obj = UserPr.objects.get(slug_field=slug)
@@ -230,6 +236,11 @@ class ChangePassword(DataMixin, UpdateView):
     template_name = 'rafuk/change_password.html'
     success_url = reverse_lazy('home')
     slug_url_kwarg = 'users_slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Смена пароля'
+        return context
 
     def get_object(self, queryset=None):
         slug = self.kwargs['users_slug']
@@ -265,6 +276,7 @@ class ChangePasswordNA(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Регистрация нового пароля'
         slug = self.kwargs['users_slug']
         userpost = UserPr.objects.get(slug_field=slug)
         user_post = get_object_or_404(UserPr, slug_field=slug)

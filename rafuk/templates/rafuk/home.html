@@ -17,11 +17,32 @@
 <p>Категория: {{ p.cat }}</p>
 <p>Фотокарточка: <img class="img-article-left thumb" src="{{p.photo.url}}"></p>
 <p>Описание: {{ p.content }}</p>
-<p>Место продажи: {{ p.where }}</p>
+<p>Место
+    продажи: {{ p.where }}</p>
 <p>Время загрузки обьявления: {{ p.time_create }}</p>
 <li><a href="{{p.get_absolute_url }}">Читать пост</a></li>
 <li><a href="{{ p.users.get_absolute_url }}">{{ p.users.name }} {{ p.users.surname }}</a></li>
 {% endfor %}
+{% for posts in page_obj %}
+    {{ contact.full_name|upper }}<br>
+{% endfor %}
 
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Первая страница</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Прошлая страница</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Следующая страница</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя страница &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock content1 %}
 {% endblock content %}

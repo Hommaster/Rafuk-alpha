@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from .views import*
 
@@ -10,8 +11,8 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('log_or_reg/', log_or_reg, name='loreg'),
     path('user/<slug:users_slug>/', ProfileUser.as_view(), name='users'),
-    path('posts/<slug:post_slug>/', ShowPost.as_view(), name='posts'),
-    path('search/', SearchResultsView.as_view(), name='search_results'),
+    path('posts/<slug:post_slug>/', cache_page(70)(ShowPost.as_view()), name='posts'),
+    path('search/', cache_page(20)(SearchResultsView.as_view()), name='search_results'),
     path('update/post/<slug:slug>/', UpdatePost2.as_view(), name='UpdatePost'),
     path('delete/post/<slug:slug>/', DeletePost.as_view(), name='Delete_Post'),
     path('update/profile/<slug:users_slug>/', UpdateProfile.as_view(), name='Update_Profile'),

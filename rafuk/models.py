@@ -11,9 +11,11 @@ class Product(models.Model):
     slug = models.SlugField(max_length=250, db_index=True, unique=True, verbose_name='URL-адрес товара')
     price = models.IntegerField(verbose_name='Стоимость')
     content = models.TextField(blank=True, verbose_name='Описание')
-    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата '
+                                                                       'создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления поста')
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name='Изображение товара')
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', verbose_name=''
+                                                                        'Изображение товара')
     is_published = models.BooleanField(default=True, verbose_name='Публикация')
     where = models.ForeignKey('Where', on_delete=PROTECT, verbose_name='Город')
     cat = models.ForeignKey('Categories', on_delete=PROTECT, verbose_name='Категория товара')

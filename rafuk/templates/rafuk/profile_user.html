@@ -6,7 +6,8 @@
 
 <p>Ваше имя: {{ profile.name }}</p>
 <p>Ваша фамилия: {{ profile.surname }}</p>
-<p>Ваши контактные данные: {{ profile.phone_number }}</p>
+<p>
+    Ваши контактные данные: {{ profile.phone_number }}</p>
 <p><a href="{% url 'Update_Profile' users_slug=us.slug_field %}">Изменить личные данные</a></p>
 <p><a href="{% url 'Change_Password' users_slug=us.slug_field %}">Поменять пароль</a></p>
 
